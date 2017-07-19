@@ -1,7 +1,4 @@
-#include "Common.h"
 #include "UnitData.h"
-
-using namespace UAlbertaBot;
 
 UnitData::UnitData() 
 	: mineralsLost(0)
