@@ -15,7 +15,7 @@ InfoManager::InfoManager() {
 	for (auto player: Broodwar->getPlayers()) {
 		if (player->isNeutral()) continue;
 
-		for (auto unit : player->getUnits) {
+		for (auto unit : player->getUnits()) {
 			//updates only if I can see unit or CompleteMapInformation is enabled
 			if (unit->isVisible() || Broodwar->isFlagEnabled(BWAPI::Flag::CompleteMapInformation)) {
 				//code below works even if SpottedObject is not present at the map (a default one is created)
@@ -51,8 +51,10 @@ void InfoManager::onFrame() {
 		}
 
 		//after updating, draw
-		for (auto unitInfo : _unitData[player]) {
-			//TODO sort this out
+		for (auto unitInfoOfPlayer : _unitData) {
+			for (auto unitInfo : unitInfoOfPlayer.second.getUnits()) {
+				drawUnit(unitInfo.second);
+			}
 		}
 	}
 
@@ -65,6 +67,7 @@ void InfoManager::onFrame() {
 }
 
 void InfoManager::drawUnit(UnitInfo& u) {
+	//don't draw visible units
 	if (u.unit->isVisible()) return;
 
 	UnitType type = u.type;
@@ -97,31 +100,39 @@ void InfoManager::drawUnit(UnitInfo& u) {
 
 void InfoManager::onUnitDiscover(Unit u) {
 	//creates or updates information about enemy unit
-	_unitData[u->getPlayer].update(u);	
+	_unitData[u->getPlayer()].updateUnit(u);	
 }
 
 void InfoManager::onUnitShow(Unit u) {
 	//creates or updates information about enemy unit
-	_unitData[u->getPlayer].update(u);
+	_unitData[u->getPlayer()].updateUnit(u);
 }
 
 void InfoManager::onUnitCreate(Unit u) {
 	//creates or updates information about enemy unit
-	_unitData[u->getPlayer].update(u);
+	_unitData[u->getPlayer()].updateUnit(u);
 }
 
 
 void InfoManager::onUnitDestroy(Unit u) {
-	_unitData[u->getPlayer].removeUnit(u);
+	_unitData[u->getPlayer()].removeUnit(u);
 }
 
 void InfoManager::onUnitMorph(Unit u) {
-	_unitData[u->getPlayer].updateUnit(u);
+	_unitData[u->getPlayer()].updateUnit(u);
 }
 
 void InfoManager::onUnitRenegade(Unit u) {
-	_unitData[u->getPlayer].updateUnit(u);
-	//TODO add code to remove unit from previous owner
+	//removes unit from previous owner
+	for (auto unitInfoOfPlayer : _unitData) {
+		if (unitInfoOfPlayer.second.getUnits().find(u) != unitInfoOfPlayer.second.getUnits().end()) {
+			//found! remove:
+			unitInfoOfPlayer.second.removeUnit(u);
+		}
+	}
+
+	//add unit to new owner
+	_unitData[u->getPlayer()].updateUnit(u);
 }
 
 
