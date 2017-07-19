@@ -1,3 +1,6 @@
 /UnitInfo/Debug/*.pdb
 *.suo
 *.sdf
+/Debug
+/ExampleAIModule/Debug
+/UnitInfo/Debug
