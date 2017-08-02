@@ -5,6 +5,11 @@
 using namespace std;
 using namespace BWAPI;
 
+InfoManager& InfoManager::getInstance() {
+	static InfoManager instance;
+	return instance;
+}
+
 InfoManager::InfoManager() {
 	//set<BWAPI::Unit*> enemyUnits = Broodwar->enemy()->getUnits();
 	Unitset enemyUnits = Broodwar->enemy()->getUnits();
@@ -109,6 +114,21 @@ void InfoManager::onUnitShow(Unit u) {
 }
 
 void InfoManager::onUnitCreate(Unit u) {
+	//creates or updates information about enemy unit
+	_unitData[u->getPlayer()].updateUnit(u);
+}
+
+void InfoManager::onUnitEvade(Unit u) {
+	//creates or updates information about enemy unit
+	_unitData[u->getPlayer()].updateUnit(u);
+}
+
+void InfoManager::onUnitHide(Unit u) {
+	//creates or updates information about enemy unit
+	_unitData[u->getPlayer()].updateUnit(u);
+}
+
+void InfoManager::onUnitComplete(Unit u) {
 	//creates or updates information about enemy unit
 	_unitData[u->getPlayer()].updateUnit(u);
 }

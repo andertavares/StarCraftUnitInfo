@@ -7,8 +7,10 @@
 class InfoManager {
 	std::map<BWAPI::Player, UnitData> _unitData;
 	void drawUnit(UnitInfo& unitInfo);
-public:
 	InfoManager();
+
+public:
+	static InfoManager& getInstance();
 	~InfoManager();
 
 	void onStart();

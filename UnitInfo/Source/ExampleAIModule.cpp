@@ -1,4 +1,5 @@
 #include "ExampleAIModule.h"
+#include "InfoManager.h"
 #include <iostream>
 
 using namespace BWAPI;
@@ -18,6 +19,8 @@ void ExampleAIModule::onStart() {
 	// and reduce the bot's APM (Actions Per Minute).
 	Broodwar->setCommandOptimizationLevel(2);
 
+	InfoManager::getInstance(); //initializes the infomanager
+
 }
 
 void ExampleAIModule::onEnd(bool isWinner) {
@@ -35,10 +38,15 @@ void ExampleAIModule::onFrame() {
 	if (Broodwar->isReplay() || Broodwar->isPaused() || !Broodwar->self())
 		return;
 
+	// activates the onFrame of InfoManager
+	InfoManager::getInstance().onFrame();
+
 	// Prevent spamming by only running our onFrame once every number of latency frames.
 	// Latency frames are the number of frames before commands are processed.
 	if (Broodwar->getFrameCount() % Broodwar->getLatencyFrames() != 0)
 		return;
+
+	
 
 	// Iterate through all the units that we own
 	for (auto &u : Broodwar->self()->getUnits()) {
@@ -181,45 +189,35 @@ void ExampleAIModule::onNukeDetect(BWAPI::Position target) {
 }
 
 void ExampleAIModule::onUnitDiscover(BWAPI::Unit unit) {
+	InfoManager::getInstance().onUnitDiscover(unit);
 }
 
 void ExampleAIModule::onUnitEvade(BWAPI::Unit unit) {
+	InfoManager::getInstance().onUnitEvade(unit);
 }
 
 void ExampleAIModule::onUnitShow(BWAPI::Unit unit) {
+	InfoManager::getInstance().onUnitShow(unit);
 }
 
 void ExampleAIModule::onUnitHide(BWAPI::Unit unit) {
+	InfoManager::getInstance().onUnitHide(unit);
 }
 
 void ExampleAIModule::onUnitCreate(BWAPI::Unit unit) {
-	if (Broodwar->isReplay()) {
-		// if we are in a replay, then we will print out the build order of the structures
-		if (unit->getType().isBuilding() && !unit->getPlayer()->isNeutral()) {
-			int seconds = Broodwar->getFrameCount() / 24;
-			int minutes = seconds / 60;
-			seconds %= 60;
-			Broodwar->sendText("%.2d:%.2d: %s creates a %s", minutes, seconds, unit->getPlayer()->getName().c_str(), unit->getType().c_str());
-		}
-	}
+	InfoManager::getInstance().onUnitCreate(unit);
 }
 
 void ExampleAIModule::onUnitDestroy(BWAPI::Unit unit) {
+	InfoManager::getInstance().onUnitDestroy(unit);
 }
 
 void ExampleAIModule::onUnitMorph(BWAPI::Unit unit) {
-	if (Broodwar->isReplay()) {
-		// if we are in a replay, then we will print out the build order of the structures
-		if (unit->getType().isBuilding() && !unit->getPlayer()->isNeutral()) {
-			int seconds = Broodwar->getFrameCount() / 24;
-			int minutes = seconds / 60;
-			seconds %= 60;
-			Broodwar->sendText("%.2d:%.2d: %s morphs a %s", minutes, seconds, unit->getPlayer()->getName().c_str(), unit->getType().c_str());
-		}
-	}
+	InfoManager::getInstance().onUnitMorph(unit);
 }
 
 void ExampleAIModule::onUnitRenegade(BWAPI::Unit unit) {
+	InfoManager::getInstance().onUnitRenegade(unit);
 }
 
 void ExampleAIModule::onSaveGame(std::string gameName) {
@@ -227,4 +225,5 @@ void ExampleAIModule::onSaveGame(std::string gameName) {
 }
 
 void ExampleAIModule::onUnitComplete(BWAPI::Unit unit) {
+	InfoManager::getInstance().onUnitComplete(unit);
 }
