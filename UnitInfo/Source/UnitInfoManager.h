@@ -5,11 +5,17 @@
 #include "UnitData.h"
 
 class UnitInfoManager {
+	/**
+	 * Effectively stores the unit data
+	 */
 	std::map<BWAPI::Player, UnitData> _unitData;
 	void drawUnit(UnitInfo& unitInfo);
 	UnitInfoManager();
 
 public:
+	/**
+	 * Returns the singleton instance of this class 
+	 */
 	static UnitInfoManager& getInstance();
 	~UnitInfoManager();
 

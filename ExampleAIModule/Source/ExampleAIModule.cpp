@@ -1,3 +1,11 @@
+/**
+ * This is just like the ExampleAIModule provided with BWAPI.
+ * We only added the code needed to instantiate and use UnitInfoManager
+ * A line of code was added at onStart
+ * A line of code was added at onFrame
+ * Callback codes were replaced with calls to UnitInfoManager methods
+ */
+
 #include "ExampleAIModule.h"
 #include "UnitInfoManager.h"
 #include <iostream>
