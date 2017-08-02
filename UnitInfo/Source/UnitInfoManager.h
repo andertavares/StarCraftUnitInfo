@@ -4,14 +4,14 @@
 #include <BWAPI.h>
 #include "UnitData.h"
 
-class InfoManager {
+class UnitInfoManager {
 	std::map<BWAPI::Player, UnitData> _unitData;
 	void drawUnit(UnitInfo& unitInfo);
-	InfoManager();
+	UnitInfoManager();
 
 public:
-	static InfoManager& getInstance();
-	~InfoManager();
+	static UnitInfoManager& getInstance();
+	~UnitInfoManager();
 
 	void onStart();
 	void onEnd(bool isWinner);

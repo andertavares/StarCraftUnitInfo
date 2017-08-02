@@ -93,12 +93,12 @@
     <ClCompile Include="Source\Dll.cpp" />
     <ClCompile Include="Source\ExampleAIModule.cpp" />
     <ClCompile Include="Source\UnitData.cpp" />
-    <ClCompile Include="Source\InfoManager.cpp" />
+    <ClCompile Include="Source\UnitInfoManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ExampleAIModule.h" />
     <ClInclude Include="Source\UnitData.h" />
-    <ClInclude Include="Source\InfoManager.h" />
+    <ClInclude Include="Source\UnitInfoManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

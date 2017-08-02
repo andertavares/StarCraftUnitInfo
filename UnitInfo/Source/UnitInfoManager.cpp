@@ -1,16 +1,16 @@
-#include "InfoManager.h"
+#include "UnitInfoManager.h"
 #include <BWAPI.h>
 #include <set>
 
 using namespace std;
 using namespace BWAPI;
 
-InfoManager& InfoManager::getInstance() {
-	static InfoManager instance;
+UnitInfoManager& UnitInfoManager::getInstance() {
+	static UnitInfoManager instance;
 	return instance;
 }
 
-InfoManager::InfoManager() {
+UnitInfoManager::UnitInfoManager() {
 	//set<BWAPI::Unit*> enemyUnits = Broodwar->enemy()->getUnits();
 	Unitset enemyUnits = Broodwar->enemy()->getUnits();
 	//set<BWAPI::Unit*>::iterator it;
@@ -34,10 +34,10 @@ InfoManager::InfoManager() {
 }
 
 
-InfoManager::~InfoManager() {
+UnitInfoManager::~UnitInfoManager() {
 }
 
-void InfoManager::onFrame() {
+void UnitInfoManager::onFrame() {
 	/*//updates spottedEnemies with currently seen enemies:
 	map<int, SpottedObject>& spottedEnemies = GameState::getSpottedEnemyUnits();
 	//adds all enemy units as spotted objects
@@ -71,7 +71,7 @@ void InfoManager::onFrame() {
 
 }
 
-void InfoManager::drawUnit(UnitInfo& u) {
+void UnitInfoManager::drawUnit(UnitInfo& u) {
 	//don't draw visible units
 	if (u.unit->isVisible()) return;
 
@@ -103,46 +103,46 @@ void InfoManager::drawUnit(UnitInfo& u) {
 	);
 }
 
-void InfoManager::onUnitDiscover(Unit u) {
+void UnitInfoManager::onUnitDiscover(Unit u) {
 	//creates or updates information about enemy unit
 	_unitData[u->getPlayer()].updateUnit(u);	
 }
 
-void InfoManager::onUnitShow(Unit u) {
+void UnitInfoManager::onUnitShow(Unit u) {
 	//creates or updates information about enemy unit
 	_unitData[u->getPlayer()].updateUnit(u);
 }
 
-void InfoManager::onUnitCreate(Unit u) {
+void UnitInfoManager::onUnitCreate(Unit u) {
 	//creates or updates information about enemy unit
 	_unitData[u->getPlayer()].updateUnit(u);
 }
 
-void InfoManager::onUnitEvade(Unit u) {
+void UnitInfoManager::onUnitEvade(Unit u) {
 	//creates or updates information about enemy unit
 	_unitData[u->getPlayer()].updateUnit(u);
 }
 
-void InfoManager::onUnitHide(Unit u) {
+void UnitInfoManager::onUnitHide(Unit u) {
 	//creates or updates information about enemy unit
 	_unitData[u->getPlayer()].updateUnit(u);
 }
 
-void InfoManager::onUnitComplete(Unit u) {
+void UnitInfoManager::onUnitComplete(Unit u) {
 	//creates or updates information about enemy unit
 	_unitData[u->getPlayer()].updateUnit(u);
 }
 
 
-void InfoManager::onUnitDestroy(Unit u) {
+void UnitInfoManager::onUnitDestroy(Unit u) {
 	_unitData[u->getPlayer()].removeUnit(u);
 }
 
-void InfoManager::onUnitMorph(Unit u) {
+void UnitInfoManager::onUnitMorph(Unit u) {
 	_unitData[u->getPlayer()].updateUnit(u);
 }
 
-void InfoManager::onUnitRenegade(Unit u) {
+void UnitInfoManager::onUnitRenegade(Unit u) {
 	//removes unit from previous owner
 	for (auto unitInfoOfPlayer : _unitData) {
 		if (unitInfoOfPlayer.second.getUnits().find(u) != unitInfoOfPlayer.second.getUnits().end()) {

@@ -1,5 +1,5 @@
 #include "ExampleAIModule.h"
-#include "InfoManager.h"
+#include "UnitInfoManager.h"
 #include <iostream>
 
 using namespace BWAPI;
@@ -19,7 +19,7 @@ void ExampleAIModule::onStart() {
 	// and reduce the bot's APM (Actions Per Minute).
 	Broodwar->setCommandOptimizationLevel(2);
 
-	InfoManager::getInstance(); //initializes the infomanager
+	UnitInfoManager::getInstance(); //initializes the UnitInfoManager
 
 }
 
@@ -38,8 +38,8 @@ void ExampleAIModule::onFrame() {
 	if (Broodwar->isReplay() || Broodwar->isPaused() || !Broodwar->self())
 		return;
 
-	// activates the onFrame of InfoManager
-	InfoManager::getInstance().onFrame();
+	// activates the onFrame of UnitInfoManager
+	UnitInfoManager::getInstance().onFrame();
 
 	// Prevent spamming by only running our onFrame once every number of latency frames.
 	// Latency frames are the number of frames before commands are processed.
@@ -189,35 +189,35 @@ void ExampleAIModule::onNukeDetect(BWAPI::Position target) {
 }
 
 void ExampleAIModule::onUnitDiscover(BWAPI::Unit unit) {
-	InfoManager::getInstance().onUnitDiscover(unit);
+	UnitInfoManager::getInstance().onUnitDiscover(unit);
 }
 
 void ExampleAIModule::onUnitEvade(BWAPI::Unit unit) {
-	InfoManager::getInstance().onUnitEvade(unit);
+	UnitInfoManager::getInstance().onUnitEvade(unit);
 }
 
 void ExampleAIModule::onUnitShow(BWAPI::Unit unit) {
-	InfoManager::getInstance().onUnitShow(unit);
+	UnitInfoManager::getInstance().onUnitShow(unit);
 }
 
 void ExampleAIModule::onUnitHide(BWAPI::Unit unit) {
-	InfoManager::getInstance().onUnitHide(unit);
+	UnitInfoManager::getInstance().onUnitHide(unit);
 }
 
 void ExampleAIModule::onUnitCreate(BWAPI::Unit unit) {
-	InfoManager::getInstance().onUnitCreate(unit);
+	UnitInfoManager::getInstance().onUnitCreate(unit);
 }
 
 void ExampleAIModule::onUnitDestroy(BWAPI::Unit unit) {
-	InfoManager::getInstance().onUnitDestroy(unit);
+	UnitInfoManager::getInstance().onUnitDestroy(unit);
 }
 
 void ExampleAIModule::onUnitMorph(BWAPI::Unit unit) {
-	InfoManager::getInstance().onUnitMorph(unit);
+	UnitInfoManager::getInstance().onUnitMorph(unit);
 }
 
 void ExampleAIModule::onUnitRenegade(BWAPI::Unit unit) {
-	InfoManager::getInstance().onUnitRenegade(unit);
+	UnitInfoManager::getInstance().onUnitRenegade(unit);
 }
 
 void ExampleAIModule::onSaveGame(std::string gameName) {
@@ -225,5 +225,5 @@ void ExampleAIModule::onSaveGame(std::string gameName) {
 }
 
 void ExampleAIModule::onUnitComplete(BWAPI::Unit unit) {
-	InfoManager::getInstance().onUnitComplete(unit);
+	UnitInfoManager::getInstance().onUnitComplete(unit);
 }
