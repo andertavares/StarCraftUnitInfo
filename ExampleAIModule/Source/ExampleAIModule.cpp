@@ -1,4 +1,5 @@
 #include "ExampleAIModule.h"
+#include "UnitInfoManager.h"
 using namespace BWAPI;
 
 bool analyzed;
@@ -14,6 +15,8 @@ void ExampleAIModule::onStart()
   Broodwar->enableFlag(Flag::UserInput);
   // Uncomment to enable complete map information
   //Broodwar->enableFlag(Flag::CompleteMapInformation);
+
+  UnitInfoManager::getInstance(); //initializes the UnitInfoManager
 
   //read map information into BWTA so terrain analysis can be done in another thread
   BWTA::readMap();
@@ -93,6 +96,9 @@ void ExampleAIModule::onFrame()
 
   if (Broodwar->isReplay())
     return;
+
+  // activates the onFrame of UnitInfoManager
+  UnitInfoManager::getInstance().onFrame();
 
   drawStats();
   if (analyzed && Broodwar->getFrameCount()%30==0)
@@ -182,77 +188,41 @@ void ExampleAIModule::onNukeDetect(BWAPI::Position target)
 
 void ExampleAIModule::onUnitDiscover(BWAPI::Unit* unit)
 {
-  if (!Broodwar->isReplay() && Broodwar->getFrameCount()>1)
-    Broodwar->sendText("A %s [%x] has been discovered at (%d,%d)",unit->getType().getName().c_str(),unit,unit->getPosition().x(),unit->getPosition().y());
+	UnitInfoManager::getInstance().onUnitDiscover(unit);
 }
 
 void ExampleAIModule::onUnitEvade(BWAPI::Unit* unit)
 {
-  if (!Broodwar->isReplay() && Broodwar->getFrameCount()>1)
-    Broodwar->sendText("A %s [%x] was last accessible at (%d,%d)",unit->getType().getName().c_str(),unit,unit->getPosition().x(),unit->getPosition().y());
+	UnitInfoManager::getInstance().onUnitEvade(unit);
 }
 
 void ExampleAIModule::onUnitShow(BWAPI::Unit* unit)
 {
-  if (!Broodwar->isReplay() && Broodwar->getFrameCount()>1)
-    Broodwar->sendText("A %s [%x] has been spotted at (%d,%d)",unit->getType().getName().c_str(),unit,unit->getPosition().x(),unit->getPosition().y());
+	UnitInfoManager::getInstance().onUnitShow(unit);
 }
 
-void ExampleAIModule::onUnitHide(BWAPI::Unit* unit)
-{
-  if (!Broodwar->isReplay() && Broodwar->getFrameCount()>1)
-    Broodwar->sendText("A %s [%x] was last seen at (%d,%d)",unit->getType().getName().c_str(),unit,unit->getPosition().x(),unit->getPosition().y());
+void ExampleAIModule::onUnitHide(BWAPI::Unit* unit) {
+	UnitInfoManager::getInstance().onUnitHide(unit);
 }
 
 void ExampleAIModule::onUnitCreate(BWAPI::Unit* unit)
 {
-  if (Broodwar->getFrameCount()>1)
-  {
-    if (!Broodwar->isReplay())
-      Broodwar->sendText("A %s [%x] has been created at (%d,%d)",unit->getType().getName().c_str(),unit,unit->getPosition().x(),unit->getPosition().y());
-    else
-    {
-      /*if we are in a replay, then we will print out the build order
-      (just of the buildings, not the units).*/
-      if (unit->getType().isBuilding() && unit->getPlayer()->isNeutral()==false)
-      {
-        int seconds=Broodwar->getFrameCount()/24;
-        int minutes=seconds/60;
-        seconds%=60;
-        Broodwar->sendText("%.2d:%.2d: %s creates a %s",minutes,seconds,unit->getPlayer()->getName().c_str(),unit->getType().getName().c_str());
-      }
-    }
-  }
+	UnitInfoManager::getInstance().onUnitCreate(unit);
 }
 
 void ExampleAIModule::onUnitDestroy(BWAPI::Unit* unit)
 {
-  if (!Broodwar->isReplay() && Broodwar->getFrameCount()>1)
-    Broodwar->sendText("A %s [%x] has been destroyed at (%d,%d)",unit->getType().getName().c_str(),unit,unit->getPosition().x(),unit->getPosition().y());
+	UnitInfoManager::getInstance().onUnitDestroy(unit);
 }
 
 void ExampleAIModule::onUnitMorph(BWAPI::Unit* unit)
 {
-  if (!Broodwar->isReplay())
-    Broodwar->sendText("A %s [%x] has been morphed at (%d,%d)",unit->getType().getName().c_str(),unit,unit->getPosition().x(),unit->getPosition().y());
-  else
-  {
-    /*if we are in a replay, then we will print out the build order
-    (just of the buildings, not the units).*/
-    if (unit->getType().isBuilding() && unit->getPlayer()->isNeutral()==false)
-    {
-      int seconds=Broodwar->getFrameCount()/24;
-      int minutes=seconds/60;
-      seconds%=60;
-      Broodwar->sendText("%.2d:%.2d: %s morphs a %s",minutes,seconds,unit->getPlayer()->getName().c_str(),unit->getType().getName().c_str());
-    }
-  }
+	UnitInfoManager::getInstance().onUnitMorph(unit);
 }
 
 void ExampleAIModule::onUnitRenegade(BWAPI::Unit* unit)
 {
-  if (!Broodwar->isReplay())
-    Broodwar->sendText("A %s [%x] is now owned by %s",unit->getType().getName().c_str(),unit,unit->getPlayer()->getName().c_str());
+	UnitInfoManager::getInstance().onUnitRenegade(unit);
 }
 
 void ExampleAIModule::onSaveGame(std::string gameName)
@@ -419,6 +389,5 @@ void ExampleAIModule::showForces()
 
 void ExampleAIModule::onUnitComplete(BWAPI::Unit *unit)
 {
-  if (!Broodwar->isReplay() && Broodwar->getFrameCount()>1)
-    Broodwar->sendText("A %s [%x] has been completed at (%d,%d)",unit->getType().getName().c_str(),unit,unit->getPosition().x(),unit->getPosition().y());
+	UnitInfoManager::getInstance().onUnitComplete(unit);
 }

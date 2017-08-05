@@ -7,20 +7,20 @@ struct UnitInfo
     // we need to store all of this data because if the unit is not visible, we
     // can't reference it from the unit pointer
 
-    int             unitID;
-    int             lastHealth;
-    int             lastShields;
-    BWAPI::Player   player;
-    BWAPI::Unit     unit;
-    BWAPI::Position lastPosition;
-    BWAPI::UnitType type;
-    bool            completed;
+    int              unitID;
+    int              lastHealth;
+    int              lastShields;
+    BWAPI::Player*   player;
+    BWAPI::Unit*     unit;
+    BWAPI::Position  lastPosition;
+    BWAPI::UnitType  type;
+    bool             completed;
 
     UnitInfo()
         : unitID(0)
         , lastHealth(0)
-        , player(nullptr)
-        , unit(nullptr)
+        , player(NULL)
+        , unit(NULL)
         , lastPosition(BWAPI::Positions::None)
         , type(BWAPI::UnitTypes::None)
         , completed(false)
@@ -28,7 +28,7 @@ struct UnitInfo
 
     }
 
-    const bool operator == (BWAPI::Unit unit) const
+    const bool operator == (BWAPI::Unit* unit) const
     {
         return unitID == unit->getID();
     }
@@ -45,7 +45,7 @@ struct UnitInfo
 };
 
 typedef std::vector<UnitInfo> UnitInfoVector;
-typedef std::map<BWAPI::Unit,UnitInfo> UIMap;
+typedef std::map<BWAPI::Unit*, UnitInfo> UIMap;
 
 class UnitData
 {
@@ -63,13 +63,13 @@ public:
 
     UnitData();
 
-    void	updateUnit(BWAPI::Unit unit);
-    void	removeUnit(BWAPI::Unit unit);
+    void	updateUnit(BWAPI::Unit* unit);
+    void	removeUnit(BWAPI::Unit* unit);
     void	removeBadUnits();
 
     int		getGasLost()                                const;
     int		getMineralsLost()                           const;
     int		getNumUnits(BWAPI::UnitType t)              const;
     int		getNumDeadUnits(BWAPI::UnitType t)          const;
-    const	std::map<BWAPI::Unit,UnitInfo> & getUnits() const;
+    const	UIMap & getUnits() const;
 };

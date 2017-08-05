@@ -11,16 +11,21 @@ UnitInfoManager& UnitInfoManager::getInstance() {
 }
 
 UnitInfoManager::UnitInfoManager() {
-	//set<BWAPI::Unit*> enemyUnits = Broodwar->enemy()->getUnits();
-	Unitset enemyUnits = Broodwar->enemy()->getUnits();
+	set<BWAPI::Unit*> enemyUnits = Broodwar->enemy()->getUnits();
+	//Unitset enemyUnits = Broodwar->enemy()->getUnits();
 	//set<BWAPI::Unit*>::iterator it;
 
 	//for (BWAPI::Unit* unit : Broodwar->enemy()->getUnits()){
-	//for (it = enemyUnits.begin(); it != enemyUnits.end(); it++) {
-	for (auto player: Broodwar->getPlayers()) {
+	set<Player*>::iterator playerIt;
+	set<Player*> players = Broodwar->getPlayers();
+	for (playerIt = players.begin(); playerIt != players.end(); playerIt++) {
+		Player* player = *playerIt;
 		if (player->isNeutral()) continue;
 
-		for (auto unit : player->getUnits()) {
+		set<Unit*>::iterator uIt;
+		set<Unit*> units = player->getUnits();
+		for (uIt = units.begin(); uIt != units.end(); uIt++){
+			Unit* unit = *uIt;
 			//updates only if I can see unit or CompleteMapInformation is enabled
 			if (unit->isVisible() || Broodwar->isFlagEnabled(BWAPI::Flag::CompleteMapInformation)) {
 				//code below works even if SpottedObject is not present at the map (a default one is created)
@@ -44,11 +49,18 @@ void UnitInfoManager::onFrame() {
 	set<BWAPI::Unit*> enemyUnits = BWAPI::Broodwar->enemy()->getUnits();
 	set<BWAPI::Unit*>::iterator uit;
 	*/
-
-	for (auto player : Broodwar->getPlayers()) {
+	set<Player*>::iterator playerIt;
+	set<Player*> players = Broodwar->getPlayers();
+	for (playerIt = players.begin(); playerIt != players.end(); playerIt++) {
+	//for (const Player* player : Broodwar->getPlayers()) {
+		Player* player = *playerIt;
 		if (player->isNeutral()) continue;
-		//for (uit = enemyUnits.begin(); uit != enemyUnits.end(); uit++) {
-		for (auto unit : player->getUnits()){
+
+		set<BWAPI::Unit*>::iterator uit;
+		set<BWAPI::Unit*> units = player->getUnits();
+		for (uit = units.begin(); uit != units.end(); uit++) {
+		//for (auto unit : player->getUnits()){
+			Unit* unit = *uit;
 			//updates only if I can see unit or CompleteMapInformation is enabled
 			if (unit->isVisible() || Broodwar->isFlagEnabled(Flag::CompleteMapInformation)) {
 				_unitData[player].updateUnit(unit);
@@ -56,8 +68,18 @@ void UnitInfoManager::onFrame() {
 		}
 
 		//after updating, draw
-		for (auto unitInfoOfPlayer : _unitData) {
-			for (auto unitInfo : unitInfoOfPlayer.second.getUnits()) {
+		std::map<BWAPI::Player*, ::UnitData>::iterator it;
+
+		//for (auto unitInfoOfPlayer : _unitData) {
+		for (it = _unitData.begin(); it != _unitData.end(); it++) {
+		//for (auto unitInfoOfPlayer : _unitData) {
+			std::pair<Player*,::UnitData> unitInfoOfPlayer = *it;
+
+			UIMap::iterator it;
+			UIMap unitInfos = unitInfoOfPlayer.second.getUnits();
+			//for (auto unitInfo : unitInfoOfPlayer.second.getUnits()) {
+			for (it = unitInfos.begin(); it != unitInfos.end(); it++){
+				pair<Unit*, UnitInfo> unitInfo = *it;
 				drawUnit(unitInfo.second);
 			}
 		}
@@ -84,67 +106,75 @@ void UnitInfoManager::drawUnit(UnitInfo& u) {
 	x, y, x / 32, y / 32
 	);
 	*/
-	int x1 = u.lastPosition.x - type.dimensionLeft();
-	int y1 = u.lastPosition.y - type.dimensionUp();
-	int x2 = u.lastPosition.x + type.dimensionRight();// - myType.dimensionLeft();
-	int y2 = u.lastPosition.y + type.dimensionDown();// -  myType.dimensionUp();
+	int x1 = u.lastPosition.x() - type.dimensionLeft();
+	int y1 = u.lastPosition.y() - type.dimensionUp();
+	int x2 = u.lastPosition.x() + type.dimensionRight();// - myType.dimensionLeft();
+	int y2 = u.lastPosition.y() + type.dimensionDown();// -  myType.dimensionUp();
 
-
-	/*
-	Logging::getInstance()->log(
-	"Rect coords: (%d,%d), (%d,%d)", x1, y1, x2, y2
+	//divides by 32 to convert from pixels to tiles
+	x1 /= 32;
+	y1 /= 32;
+	x2 /= 32;
+	y2 /= 32;
+	
+	Broodwar->printf(
+		"Rect coords: (%d,%d), (%d,%d)", x1, y1, x2, y2
 	);
-	*/
+	
 
 	BWAPI::Broodwar->drawBoxMap(x1, y1, x2, y2, Colors::Red, false);
 	BWAPI::Broodwar->drawTextMap(
-		x1, u.lastPosition.y,
+		x1, u.lastPosition.y(),
 		type.c_str()
 	);
 }
 
-void UnitInfoManager::onUnitDiscover(Unit u) {
+void UnitInfoManager::onUnitDiscover(Unit* u) {
 	//creates or updates information about enemy unit
 	_unitData[u->getPlayer()].updateUnit(u);	
 }
 
-void UnitInfoManager::onUnitShow(Unit u) {
+void UnitInfoManager::onUnitShow(Unit* u) {
 	//creates or updates information about enemy unit
 	_unitData[u->getPlayer()].updateUnit(u);
 }
 
-void UnitInfoManager::onUnitCreate(Unit u) {
+void UnitInfoManager::onUnitCreate(Unit* u) {
 	//creates or updates information about enemy unit
 	_unitData[u->getPlayer()].updateUnit(u);
 }
 
-void UnitInfoManager::onUnitEvade(Unit u) {
+void UnitInfoManager::onUnitEvade(Unit* u) {
 	//creates or updates information about enemy unit
 	_unitData[u->getPlayer()].updateUnit(u);
 }
 
-void UnitInfoManager::onUnitHide(Unit u) {
+void UnitInfoManager::onUnitHide(Unit* u) {
 	//creates or updates information about enemy unit
 	_unitData[u->getPlayer()].updateUnit(u);
 }
 
-void UnitInfoManager::onUnitComplete(Unit u) {
+void UnitInfoManager::onUnitComplete(Unit* u) {
 	//creates or updates information about enemy unit
 	_unitData[u->getPlayer()].updateUnit(u);
 }
 
 
-void UnitInfoManager::onUnitDestroy(Unit u) {
+void UnitInfoManager::onUnitDestroy(Unit* u) {
 	_unitData[u->getPlayer()].removeUnit(u);
 }
 
-void UnitInfoManager::onUnitMorph(Unit u) {
+void UnitInfoManager::onUnitMorph(Unit* u) {
 	_unitData[u->getPlayer()].updateUnit(u);
 }
 
-void UnitInfoManager::onUnitRenegade(Unit u) {
+void UnitInfoManager::onUnitRenegade(Unit* u) {
 	//removes unit from previous owner
-	for (auto unitInfoOfPlayer : _unitData) {
+	map<BWAPI::Player*, ::UnitData>::iterator it;
+
+	//for (auto unitInfoOfPlayer : _unitData) {
+	for (it = _unitData.begin(); it != _unitData.end(); it++){
+		pair<Player*, ::UnitData> unitInfoOfPlayer = *it;
 		if (unitInfoOfPlayer.second.getUnits().find(u) != unitInfoOfPlayer.second.getUnits().end()) {
 			//found! remove:
 			unitInfoOfPlayer.second.removeUnit(u);

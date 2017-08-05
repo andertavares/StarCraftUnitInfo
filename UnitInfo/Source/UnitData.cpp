@@ -5,21 +5,26 @@ UnitData::UnitData()
 	, gasLost(0)
 {
 	int maxTypeID(0);
-	for (const BWAPI::UnitType & t : BWAPI::UnitTypes::allUnitTypes())
+	std::set<BWAPI::UnitType>::iterator typeIt;
+	std::set<BWAPI::UnitType> types = BWAPI::UnitTypes::allUnitTypes();
+	//for (BWAPI::UnitType t : BWAPI::UnitTypes::allUnitTypes())
+	for (typeIt = types.begin(); typeIt != types.end(); typeIt++)
 	{
-		maxTypeID = maxTypeID > t.getID() ? maxTypeID : t.getID();
+
+		maxTypeID = maxTypeID > (*typeIt).getID() ? maxTypeID : (*typeIt).getID();
 	}
 
 	numDeadUnits	    = std::vector<int>(maxTypeID + 1, 0);
 	numUnits		    = std::vector<int>(maxTypeID + 1, 0);
 }
 
-void UnitData::updateUnit(BWAPI::Unit unit)
+void UnitData::updateUnit(BWAPI::Unit* unit)
 {
 	if (!unit) { return; }
 
     bool firstSeen = false;
-    auto & it = unitMap.find(unit);
+    //auto & it = unitMap.find(unit);
+	UIMap::iterator it = unitMap.find(unit);
     if (it == unitMap.end())
     {
         firstSeen = true;
@@ -42,7 +47,7 @@ void UnitData::updateUnit(BWAPI::Unit unit)
     }
 }
 
-void UnitData::removeUnit(BWAPI::Unit unit)
+void UnitData::removeUnit(BWAPI::Unit* unit)
 {
 	if (!unit) { return; }
 
@@ -56,7 +61,8 @@ void UnitData::removeUnit(BWAPI::Unit unit)
 
 void UnitData::removeBadUnits()
 {
-	for (auto iter(unitMap.begin()); iter != unitMap.end();)
+	UIMap::iterator iter;
+	for (iter = unitMap.begin(); iter != unitMap.end();)
 	{
 		if (badUnitInfo(iter->second))
 		{
@@ -84,7 +90,7 @@ const bool UnitData::badUnitInfo(const UnitInfo & ui) const
 	}
 
 	// If the unit is a building and we can currently see its position and it is not there
-	if (ui.type.isBuilding() && BWAPI::Broodwar->isVisible(ui.lastPosition.x/32, ui.lastPosition.y/32) && !ui.unit->isVisible())
+	if (ui.type.isBuilding() && BWAPI::Broodwar->isVisible(ui.lastPosition.x()/32, ui.lastPosition.y()/32) && !ui.unit->isVisible())
 	{
 		return true;
 	}
@@ -112,7 +118,7 @@ int UnitData::getNumDeadUnits(BWAPI::UnitType t) const
     return numDeadUnits[t.getID()]; 
 }
 
-const std::map<BWAPI::Unit,UnitInfo> & UnitData::getUnits() const 
+const UIMap & UnitData::getUnits() const 
 { 
     return unitMap; 
 }
