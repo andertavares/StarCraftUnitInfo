@@ -98,28 +98,11 @@ void UnitInfoManager::drawUnit(UnitInfo& u) {
 	if (u.unit->isVisible()) return;
 
 	UnitType type = u.type;
-	/*
-	Logging::getInstance()->log(
-	"[%d] Drawing %s at %d,%d / tile: (%d,%d)",
-	BWAPI::Broodwar->getFrameCount(),
-	myType.getName().c_str(),
-	x, y, x / 32, y / 32
-	);
-	*/
+
 	int x1 = u.lastPosition.x() - type.dimensionLeft();
 	int y1 = u.lastPosition.y() - type.dimensionUp();
-	int x2 = u.lastPosition.x() + type.dimensionRight();// - myType.dimensionLeft();
-	int y2 = u.lastPosition.y() + type.dimensionDown();// -  myType.dimensionUp();
-
-	//divides by 32 to convert from pixels to tiles
-	x1 /= 32;
-	y1 /= 32;
-	x2 /= 32;
-	y2 /= 32;
-	
-	Broodwar->printf(
-		"Rect coords: (%d,%d), (%d,%d)", x1, y1, x2, y2
-	);
+	int x2 = u.lastPosition.x() + type.dimensionRight();
+	int y2 = u.lastPosition.y() + type.dimensionDown();
 	
 
 	BWAPI::Broodwar->drawBoxMap(x1, y1, x2, y2, Colors::Red, false);
@@ -184,5 +167,3 @@ void UnitInfoManager::onUnitRenegade(Unit* u) {
 	//add unit to new owner
 	_unitData[u->getPlayer()].updateUnit(u);
 }
-
-
