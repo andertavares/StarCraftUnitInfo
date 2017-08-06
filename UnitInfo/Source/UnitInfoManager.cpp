@@ -4,6 +4,7 @@
 
 using namespace std;
 using namespace BWAPI;
+using namespace scutil;
 
 UnitInfoManager& UnitInfoManager::getInstance() {
 	static UnitInfoManager instance;
@@ -68,12 +69,12 @@ void UnitInfoManager::onFrame() {
 		}
 
 		//after updating, draw
-		std::map<BWAPI::Player*, ::UnitData>::iterator it;
+		std::map<BWAPI::Player*, scutil::UnitData>::iterator it;
 
 		//for (auto unitInfoOfPlayer : _unitData) {
 		for (it = _unitData.begin(); it != _unitData.end(); it++) {
 		//for (auto unitInfoOfPlayer : _unitData) {
-			std::pair<Player*,::UnitData> unitInfoOfPlayer = *it;
+			std::pair<Player*, scutil::UnitData> unitInfoOfPlayer = *it;
 
 			UIMap::iterator it;
 			UIMap unitInfos = unitInfoOfPlayer.second.getUnits();
@@ -153,11 +154,11 @@ void UnitInfoManager::onUnitMorph(Unit* u) {
 
 void UnitInfoManager::onUnitRenegade(Unit* u) {
 	//removes unit from previous owner
-	map<BWAPI::Player*, ::UnitData>::iterator it;
+	map<BWAPI::Player*, scutil::UnitData>::iterator it;
 
 	//for (auto unitInfoOfPlayer : _unitData) {
 	for (it = _unitData.begin(); it != _unitData.end(); it++){
-		pair<Player*, ::UnitData> unitInfoOfPlayer = *it;
+		pair<Player*, scutil::UnitData> unitInfoOfPlayer = *it;
 		if (unitInfoOfPlayer.second.getUnits().find(u) != unitInfoOfPlayer.second.getUnits().end()) {
 			//found! remove:
 			unitInfoOfPlayer.second.removeUnit(u);

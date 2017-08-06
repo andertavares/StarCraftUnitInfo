@@ -1,5 +1,7 @@
 #include "UnitData.h"
 
+using namespace scutil;
+
 UnitData::UnitData() 
 	: mineralsLost(0)
 	, gasLost(0)

@@ -1,6 +1,7 @@
 #include "ExampleAIModule.h"
 #include "UnitInfoManager.h"
 using namespace BWAPI;
+using namespace scutil;
 
 bool analyzed;
 bool analysis_just_finished;
