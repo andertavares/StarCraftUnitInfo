@@ -13,10 +13,7 @@ UnitInfoManager& UnitInfoManager::getInstance() {
 
 UnitInfoManager::UnitInfoManager() {
 	set<BWAPI::Unit*> enemyUnits = Broodwar->enemy()->getUnits();
-	//Unitset enemyUnits = Broodwar->enemy()->getUnits();
-	//set<BWAPI::Unit*>::iterator it;
 
-	//for (BWAPI::Unit* unit : Broodwar->enemy()->getUnits()){
 	set<Player*>::iterator playerIt;
 	set<Player*> players = Broodwar->getPlayers();
 	for (playerIt = players.begin(); playerIt != players.end(); playerIt++) {
@@ -29,10 +26,8 @@ UnitInfoManager::UnitInfoManager() {
 			Unit* unit = *uIt;
 			//updates only if I can see unit or CompleteMapInformation is enabled
 			if (unit->isVisible() || Broodwar->isFlagEnabled(BWAPI::Flag::CompleteMapInformation)) {
-				//code below works even if SpottedObject is not present at the map (a default one is created)
-
+				//code below works even if item is not present at the map (a default one is created)
 				_unitData[player].updateUnit(unit);
-				//persistentEnemyObjects[(*it)->getID()].update(*it); //this one is updated in GameStateManager::onFrame
 			}
 
 		}
@@ -43,13 +38,20 @@ UnitInfoManager::UnitInfoManager() {
 UnitInfoManager::~UnitInfoManager() {
 }
 
+const scutil::UnitData & UnitInfoManager::getUnitDataOfPlayer(BWAPI::Player* player) {
+	return _unitData[player];
+}
+
+const std::map<BWAPI::Player*, scutil::UnitData>& UnitInfoManager::getAllUnitData() const {
+	return _unitData;
+}
+
+const	UIMap & UnitInfoManager::getUnitInfoMapOfPlayer(BWAPI::Player* player) {
+	return getUnitDataOfPlayer(player).getUnits();
+}
+
 void UnitInfoManager::onFrame() {
-	/*//updates spottedEnemies with currently seen enemies:
-	map<int, SpottedObject>& spottedEnemies = GameState::getSpottedEnemyUnits();
-	//adds all enemy units as spotted objects
-	set<BWAPI::Unit*> enemyUnits = BWAPI::Broodwar->enemy()->getUnits();
-	set<BWAPI::Unit*>::iterator uit;
-	*/
+
 	set<Player*>::iterator playerIt;
 	set<Player*> players = Broodwar->getPlayers();
 	for (playerIt = players.begin(); playerIt != players.end(); playerIt++) {
@@ -85,13 +87,6 @@ void UnitInfoManager::onFrame() {
 			}
 		}
 	}
-
-	
-
-	//draws information of observed units
-
-	//Logging::getInstance()->log("[%d] I spotted %d enemies", BWAPI::Broodwar->getFrameCount(), spottedEnemies.size());
-
 }
 
 void UnitInfoManager::drawUnit(UnitInfo& u) {
