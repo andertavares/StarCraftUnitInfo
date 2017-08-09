@@ -40,7 +40,7 @@ for (it = enemyUnitInfo.begin(); it != enemyUnitInfo.end(); it++) {
  ```
 First, you get the UIMap with units of the enemy, then you traverse it querying data of each unit that has been seen at least once, and is still alive.
 
-Also, in our releases, there is a `UnitInfoExampleAI`, which is the basic `ExampleAIModule` of BWAPI 3, with the project configuration and the code to use the module.
+Also, in our releases, there is a `UnitInfoExampleAI`, which is the basic `ExampleAIModule` of BWAPI 3, with the project configuration and the code to use the module. When opening the `.sln` in Visual Studio, if a message requests you to "Upgrade VC++ Compiler and Libraries", please refuse by clicking cancel. This is because, although the project opens on Visual Studio 2012 (or 2013), the library builds on v90 Platform Toolset (of VC++2008). If you're working with BWAPI 3.7.5, that's probably the one you have, so you must not allow Visual Studio to use newer compilers or libraries.
 
 # Contact
 If you found some error, please open an Issue. For general questions, feel free to contact the author: andersonrochatavares .at. gmail.com
