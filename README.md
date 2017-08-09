@@ -1,5 +1,5 @@
 # StarCraftUnitInfo
-A module to store StarCraft Information of units behind the fog-of-war. Many bot developers must spend some time to develop such unit tracking modules, and the idea here is to offer this as a library. For example, [UAlbertaBot](https://github.com/davechurchill/ualbertabot) has this module nicely implemented there, but it is not trivial to extract and use it in your own bot. So this module is basically an extraction of UAlbertaBot's code, regarding unit tracking.
+A module to store StarCraft Information of units behind the fog-of-war. Many bot developers must spend some time to develop such unit tracking modules, and the idea here is to offer this as a library. For example, [UAlbertaBot](https://github.com/davechurchill/ualbertabot) has this module nicely implemented there, but it is not trivial to extract and use it in your own bot. So this module is basically an extraction of UAlbertaBot's code, regarding unit tracking. This specific branch is a port of such code for compatibility with BWAPI 3.
 
 The module stores information (position, HP, shields, etc.) concerning the last time a unit was seen. It also has functions for drawing boxes and unit names on such positions to aid visual inspecting and debugging.
 
