@@ -11,13 +11,11 @@ UnitInfoManager& UnitInfoManager::getInstance() {
 	return instance;
 }
 
-UnitInfoManager::UnitInfoManager() {
-	//set<BWAPI::Unit*> enemyUnits = Broodwar->enemy()->getUnits();
-	Unitset enemyUnits = Broodwar->enemy()->getUnits();
-	//set<BWAPI::Unit*>::iterator it;
+UnitInfoManager::UnitInfoManager() { 
+	//empty constructor
+}
 
-	//for (BWAPI::Unit* unit : Broodwar->enemy()->getUnits()){
-	//for (it = enemyUnits.begin(); it != enemyUnits.end(); it++) {
+void UnitInfoManager::onStart() {
 	for (auto player: Broodwar->getPlayers()) {
 		if (player->isNeutral()) continue;
 
@@ -52,7 +50,6 @@ void UnitInfoManager::onFrame() {
 
 	for (auto player : Broodwar->getPlayers()) {
 		if (player->isNeutral()) continue;
-		//for (uit = enemyUnits.begin(); uit != enemyUnits.end(); uit++) {
 		for (auto unit : player->getUnits()){
 			//updates only if I can see unit or CompleteMapInformation is enabled
 			if (unit->isVisible() || Broodwar->isFlagEnabled(Flag::CompleteMapInformation)) {
