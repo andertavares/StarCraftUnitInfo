@@ -11,6 +11,7 @@
 #include <iostream>
 
 using namespace BWAPI;
+using namespace scutil;
 using namespace Filter;
 
 void ExampleAIModule::onStart() {
@@ -48,6 +49,22 @@ void ExampleAIModule::onFrame() {
 
 	// activates the onFrame of UnitInfoManager
 	UnitInfoManager::getInstance().onFrame();
+
+	// Example of use of enemy unit information:
+ 	// traverses every enemy unit in my knowledge and show their information
+	UIMap::iterator it;
+	UIMap enemyUnitInfo = UnitInfoManager::getInstance().getUnitInfoMapOfPlayer(Broodwar->enemy());
+	
+	for (it = enemyUnitInfo.begin(); it != enemyUnitInfo.end(); it++) {
+	  Unit* u = (*it).first;
+	  UnitInfo uInfo = (*it).second;
+	  
+	  Broodwar->printf(
+		  "%s at (%d, %d)", uInfo.type.c_str(),
+		  uInfo.lastPosition.x(), uInfo.lastPosition.y()
+	  );
+	  // see UnitData.h for all attributes of UnitInfo struct ;)
+	}
 
 	// Prevent spamming by only running our onFrame once every number of latency frames.
 	// Latency frames are the number of frames before commands are processed.

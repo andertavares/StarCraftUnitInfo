@@ -5,3 +5,5 @@
 /ExampleAIModule/Debug
 /UnitInfo/Debug
 *.opensdf
+/ExampleAIModule/Release
+Release

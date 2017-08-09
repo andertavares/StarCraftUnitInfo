@@ -112,7 +112,7 @@ int UnitData::getNumDeadUnits(BWAPI::UnitType t) const
     return numDeadUnits[t.getID()]; 
 }
 
-const std::map<BWAPI::Unit,UnitInfo> & UnitData::getUnits() const 
+const UIMap & UnitData::getUnits() const 
 { 
     return unitMap; 
 }

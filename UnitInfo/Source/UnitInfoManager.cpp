@@ -4,6 +4,7 @@
 
 using namespace std;
 using namespace BWAPI;
+using namespace scutil;
 
 UnitInfoManager& UnitInfoManager::getInstance() {
 	static UnitInfoManager instance;
@@ -23,10 +24,8 @@ UnitInfoManager::UnitInfoManager() {
 		for (auto unit : player->getUnits()) {
 			//updates only if I can see unit or CompleteMapInformation is enabled
 			if (unit->isVisible() || Broodwar->isFlagEnabled(BWAPI::Flag::CompleteMapInformation)) {
-				//code below works even if SpottedObject is not present at the map (a default one is created)
-
+				//code below works even if item is not present at the map (a default one is created)
 				_unitData[player].updateUnit(unit);
-				//persistentEnemyObjects[(*it)->getID()].update(*it); //this one is updated in GameStateManager::onFrame
 			}
 
 		}
@@ -37,13 +36,19 @@ UnitInfoManager::UnitInfoManager() {
 UnitInfoManager::~UnitInfoManager() {
 }
 
+const scutil::UnitData & UnitInfoManager::getUnitDataOfPlayer(BWAPI::Player player) {
+	return _unitData[player];
+}
+
+const std::map<BWAPI::Player, scutil::UnitData>& UnitInfoManager::getAllUnitData() const {
+	return _unitData;
+}
+
+const	UIMap & UnitInfoManager::getUnitInfoMapOfPlayer(BWAPI::Player player) {
+	return getUnitDataOfPlayer(player).getUnits();
+}
+
 void UnitInfoManager::onFrame() {
-	/*//updates spottedEnemies with currently seen enemies:
-	map<int, SpottedObject>& spottedEnemies = GameState::getSpottedEnemyUnits();
-	//adds all enemy units as spotted objects
-	set<BWAPI::Unit*> enemyUnits = BWAPI::Broodwar->enemy()->getUnits();
-	set<BWAPI::Unit*>::iterator uit;
-	*/
 
 	for (auto player : Broodwar->getPlayers()) {
 		if (player->isNeutral()) continue;
@@ -62,13 +67,6 @@ void UnitInfoManager::onFrame() {
 			}
 		}
 	}
-
-	
-
-	//draws information of observed units
-
-	//Logging::getInstance()->log("[%d] I spotted %d enemies", BWAPI::Broodwar->getFrameCount(), spottedEnemies.size());
-
 }
 
 void UnitInfoManager::drawUnit(UnitInfo& u) {
@@ -76,25 +74,12 @@ void UnitInfoManager::drawUnit(UnitInfo& u) {
 	if (u.unit->isVisible()) return;
 
 	UnitType type = u.type;
-	/*
-	Logging::getInstance()->log(
-	"[%d] Drawing %s at %d,%d / tile: (%d,%d)",
-	BWAPI::Broodwar->getFrameCount(),
-	myType.getName().c_str(),
-	x, y, x / 32, y / 32
-	);
-	*/
+
 	int x1 = u.lastPosition.x - type.dimensionLeft();
 	int y1 = u.lastPosition.y - type.dimensionUp();
-	int x2 = u.lastPosition.x + type.dimensionRight();// - myType.dimensionLeft();
-	int y2 = u.lastPosition.y + type.dimensionDown();// -  myType.dimensionUp();
+	int x2 = u.lastPosition.x + type.dimensionRight();
+	int y2 = u.lastPosition.y + type.dimensionDown();
 
-
-	/*
-	Logging::getInstance()->log(
-	"Rect coords: (%d,%d), (%d,%d)", x1, y1, x2, y2
-	);
-	*/
 
 	BWAPI::Broodwar->drawBoxMap(x1, y1, x2, y2, Colors::Red, false);
 	BWAPI::Broodwar->drawTextMap(
