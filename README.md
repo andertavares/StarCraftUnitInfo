@@ -3,6 +3,8 @@ A module to store StarCraft Information of units behind the fog-of-war. Many bot
 
 The module stores information (position, HP, shields, etc.) concerning the last time a unit was seen. It also has functions for drawing boxes and unit names on such positions to aid visual inspecting and debugging.
 
+The master branch contains code for BWAPI 4.1.2. If you're looking for information and instructions for the version compatible with BWAPI 3.7.5, please take a look here: https://github.com/andertavares/StarCraftUnitInfo/tree/bwapi3
+
 # Preparing the library
 - Download the version you need in Releases. Each release has a library (`UnitInfoLib`) and an example AI module (`UnitInfoExampleAI`). For these steps, select the library.
 - Extract the contents inside your AI module. There's an `include` and a `lib` directory.
@@ -24,23 +26,23 @@ The structures and classes concerned with unit information are:
 To retrieve information of units, please take a look at the following piece of code:
 
 ```
-UIMap::iterator it;
+// Example of use of enemy unit information:
 UIMap enemyUnitInfo = UnitInfoManager::getInstance().getUnitInfoMapOfPlayer(Broodwar->enemy());
 
-for (it = enemyUnitInfo.begin(); it != enemyUnitInfo.end(); it++) {
-	Unit* u = (*it).first;
-	UnitInfo uInfo = (*it).second;
+for (auto iterator : enemyUnitInfo) {
+	Unit u = iterator.first;
+	UnitInfo uInfo = iterator.second;
 
 	Broodwar->printf(
 		"%s at (%d, %d)", uInfo.type.c_str(),
-		uInfo.lastPosition.x(), uInfo.lastPosition.y()
+		uInfo.lastPosition.x, uInfo.lastPosition.y
 	);
 	// see UnitData.h for all attributes of UnitInfo struct ;)
 }
  ```
 First, you get the UIMap with units of the enemy, then you traverse it querying data of each unit that has been seen at least once, and is still alive.
 
-Also, in our releases, there is a `UnitInfoExampleAI`, which is the basic `ExampleAIModule` of BWAPI 3, with the project configuration and the code to use the module.
+Also, in our releases, there is a `UnitInfoExampleAI`, which is the basic `ExampleAIModule` of BWAPI, with the project configuration and the code to use the module.
 
 # Contact
 If you found some error, please open an Issue. For general questions, feel free to contact the author: andersonrochatavares .at. gmail.com
