@@ -19,7 +19,7 @@ The master branch contains code for BWAPI 4.1.2. If you're looking for informati
 The structures and classes concerned with unit information are: 
 - `UnitInfoManager`: has the callbacks and the methods to access the other structures
 - `UnitData`: takes care of consistency of unit data
-- `UIMap`: maps a `BWAPI::Unit*` to a `UnitInfo`, which actually stores the information.
+- `UIMap`: maps a `BWAPI::Unit` to a `UnitInfo`, which actually stores the information.
 - `UnitInfo`: allows you to retrieve unitID, lastHealth, lastShields, player, unit, lastPosition, type, completed of a unit you cannot see anymore.
 
 ## Example of use
