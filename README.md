@@ -24,19 +24,19 @@ The structures and classes concerned with unit information are:
 To retrieve information of units, please take a look at the following piece of code:
 
 ```
-	UIMap::iterator it;
-	UIMap enemyUnitInfo = UnitInfoManager::getInstance().getUnitInfoMapOfPlayer(Broodwar->enemy());
+UIMap::iterator it;
+UIMap enemyUnitInfo = UnitInfoManager::getInstance().getUnitInfoMapOfPlayer(Broodwar->enemy());
 
-	for (it = enemyUnitInfo.begin(); it != enemyUnitInfo.end(); it++) {
-		Unit* u = (*it).first;
-		UnitInfo uInfo = (*it).second;
+for (it = enemyUnitInfo.begin(); it != enemyUnitInfo.end(); it++) {
+	Unit* u = (*it).first;
+	UnitInfo uInfo = (*it).second;
 
-		Broodwar->printf(
-			"%s at (%d, %d)", uInfo.type.c_str(),
-			uInfo.lastPosition.x(), uInfo.lastPosition.y()
-			);
-		// see UnitData.h for all attributes of UnitInfo struct ;)
-	}
+	Broodwar->printf(
+		"%s at (%d, %d)", uInfo.type.c_str(),
+		uInfo.lastPosition.x(), uInfo.lastPosition.y()
+	);
+	// see UnitData.h for all attributes of UnitInfo struct ;)
+}
  ```
 First, you get the UIMap with units of the enemy, then you traverse it querying data of each unit that has been seen at least once, and is still alive.
 
@@ -46,4 +46,4 @@ Also, in our releases, there is a `UnitInfoExampleAI`, which is the basic `Examp
 If you found some error, please open an Issue. For general questions, feel free to contact the author: andersonrochatavares .at. gmail.com
 
 # Credits
-Much of this code was extracted from [UAlbertaBot](https://github.com/davechurchill/ualbertabot). Some code and inspiration came from [OpprimoBot](https://github.com/jhagelback/OpprimoBot).
+Most of this code was extracted from [UAlbertaBot](https://github.com/davechurchill/ualbertabot). Some code and inspiration came from [OpprimoBot](https://github.com/jhagelback/OpprimoBot).
