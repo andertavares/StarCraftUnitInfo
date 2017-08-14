@@ -11,7 +11,7 @@ The master branch contains code for BWAPI 4.1.2. If you're looking for informati
 - Add `include` directory to your project in both Debug and Release configurations (right click on your AI Module's project -> Properties -> C/C++ -> Additional Include Directories)
 - Add `lib/UnitInfo.lib` to your project under Release configuration and `lib/UnitInfo.lib` to your Debug configuration. In either case, the steps are: right click on your AI Module's project -> Properties -> Linker -> Input -> Additional dependencies.
 - Open your AI Module's source file and add `#include "UnitInfoManager.h"` in your preamble.
-- Add `scutil::UnitInfoManager::getInstance();` to your `onStart()` to initialize the module.
+- Add `scutil::UnitInfoManager::getInstance().onStart();` to your `onStart()` to initialize the module.
 - Add the callbacks to `scutil::UnitInfoManager` at the following callbacks of your AI Module: `onFrame`, `onUnitDiscover`, `onUnitEvade`, `onUnitShow`, `onUnitHide`, `onUnitCreate`, `onUnitDestroy`, `onUnitMorph`, `onUnitRenegade`, `onUnitComplete`. The callbacks are on the form: `scutil::UnitInfoManager::getInstance().on*`, where you replace the `*` with the corresponding name, passing the same parameters received by the callback of your AI Module.
 
 # Using the library
